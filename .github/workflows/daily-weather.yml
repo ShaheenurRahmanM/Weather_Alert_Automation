@@ -1,0 +1,23 @@
+name: Daily Weather Alert
+
+# Default 8:00 AM IST = 2:30 AM UTC (IST = UTC+5:30).
+# If you change daily_time_ist in config.json, update this cron too (in UTC).
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:        # run manually from the Actions tab to test
+
+jobs:
+  send-daily:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Send daily weather notification
+        env:
+          # Optional: keep your topic secret instead of in config.json.
+          # Add it under Settings > Secrets > Actions as NTFY_TOPIC.
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python daily_alert.py
