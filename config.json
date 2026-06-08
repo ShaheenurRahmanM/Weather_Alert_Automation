@@ -1,0 +1,14 @@
+{
+  "ntfy_topic": "shah_weather_2005",
+  "ntfy_server": "https://ntfy.sh",
+  "location_name": "Kuniyamuthur, Coimbatore",
+  "latitude": 10.963,
+  "longitude": 76.947,
+  "skin_type": "oily",
+  "units": "metric",
+  "daily_enabled": true,
+  "daily_time_ist": "08:00",
+  "rain_enabled": true,
+  "rain_lookahead_min": 30,
+  "rain_threshold_mm": 0.2
+}

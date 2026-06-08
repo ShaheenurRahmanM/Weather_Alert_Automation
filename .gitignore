@@ -1,0 +1,6 @@
+rain_state.json
+config.test.json
+*.log
+__pycache__/
+*.pyc
+.env

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weather Alert Settings</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#273449; --accent:#38bdf8;
+    --accent2:#22d3ee; --text:#e2e8f0; --muted:#94a3b8; --ok:#34d399; --warn:#fbbf24;
+    --border:#334155;
+  }
+  *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  body{margin:0;background:linear-gradient(160deg,#0f172a,#1e293b);color:var(--text);min-height:100vh;padding:24px 14px}
+  .wrap{max-width:640px;margin:0 auto}
+  h1{font-size:1.6rem;margin:0 0 4px;display:flex;gap:10px;align-items:center}
+  .sub{color:var(--muted);margin:0 0 22px;font-size:.92rem;line-height:1.5}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+  .card h2{font-size:1.05rem;margin:0 0 14px;display:flex;gap:8px;align-items:center}
+  label{display:block;font-size:.82rem;color:var(--muted);margin:0 0 6px;font-weight:600;letter-spacing:.02em}
+  input,select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);
+    background:var(--card2);color:var(--text);font-size:.95rem;margin-bottom:14px;outline:none}
+  input:focus,select:focus{border-color:var(--accent)}
+  .row{display:flex;gap:12px}.row>div{flex:1}
+  .toggle{display:flex;align-items:center;justify-content:space-between;background:var(--card2);
+    padding:12px 14px;border-radius:10px;margin-bottom:12px;border:1px solid var(--border)}
+  .toggle span{font-size:.92rem}
+  .switch{position:relative;width:48px;height:26px;flex:none}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:#475569;border-radius:99px;transition:.2s;cursor:pointer}
+  .slider:before{content:"";position:absolute;height:20px;width:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+  .switch input:checked+.slider{background:var(--accent)}
+  .switch input:checked+.slider:before{transform:translateX(22px)}
+  .hint{font-size:.76rem;color:var(--muted);margin:-8px 0 14px;line-height:1.45}
+  button{cursor:pointer;border:none;border-radius:10px;font-size:.95rem;font-weight:600;padding:12px 16px}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#04293a;width:100%}
+  .btn-ghost{background:var(--card2);color:var(--text);border:1px solid var(--border)}
+  .btn-test{background:var(--ok);color:#053b2b}
+  .actions{display:flex;gap:10px;margin-top:6px}
+  pre{background:#0b1220;border:1px solid var(--border);border-radius:10px;padding:14px;overflow:auto;font-size:.8rem;color:#a5f3fc;white-space:pre-wrap;word-break:break-word}
+  .status{font-size:.85rem;margin-top:10px;min-height:18px}
+  .ok{color:var(--ok)}.err{color:#f87171}
+  a{color:var(--accent)}
+  .steps{font-size:.85rem;color:var(--muted);line-height:1.6;padding-left:18px;margin:0}
+  .badge{display:inline-block;background:var(--card2);border:1px solid var(--border);border-radius:99px;padding:2px 10px;font-size:.72rem;color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🌦️ Weather Alert Settings</h1>
+  <p class="sub">Customize your daily weather notification & rain alerts. Everything here is <b>100% free</b> and delivered as a <b>push notification</b> via <a href="https://ntfy.sh" target="_blank">ntfy.sh</a> — no account or login needed.</p>
+
+  <div class="card">
+    <h2>📲 Step 1 — Set up the app</h2>
+    <ol class="steps">
+      <li>Install the free <b>ntfy</b> app: <a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank">Android</a> · <a href="https://apps.apple.com/us/app/ntfy/id1625396347" target="_blank">iPhone</a> · or use <a href="https://ntfy.sh/app" target="_blank">the web app</a>.</li>
+      <li>Pick a <b>secret topic name</b> below (like a password — make it unique).</li>
+      <li>In the ntfy app, tap <b>+</b> → <b>Subscribe to topic</b> → enter the exact same name.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>🔔 Notification channel</h2>
+    <label>Your secret ntfy topic</label>
+    <input id="topic" placeholder="e.g. kovai-weather-7h3k9q" />
+    <div class="hint">Use something random &amp; private. Anyone who knows this name can send you notifications.</div>
+  </div>
+
+  <div class="card">
+    <h2>📍 Location</h2>
+    <label>Location name (shown in messages)</label>
+    <input id="location_name" value="Kuniyamuthur, Coimbatore" />
+    <div class="row">
+      <div><label>Latitude</label><input id="latitude" value="10.963" /></div>
+      <div><label>Longitude</label><input id="longitude" value="76.947" /></div>
+    </div>
+    <div class="hint">Find coordinates at <a href="https://www.latlong.net/" target="_blank">latlong.net</a> if you change location.</div>
+  </div>
+
+  <div class="card">
+    <h2>🧴 Personal preferences</h2>
+    <div class="row">
+      <div>
+        <label>Skin type</label>
+        <select id="skin_type">
+          <option value="oily">Oily</option>
+          <option value="dry">Dry</option>
+          <option value="combination">Combination</option>
+          <option value="sensitive">Sensitive</option>
+        </select>
+      </div>
+      <div>
+        <label>Temperature units</label>
+        <select id="units">
+          <option value="metric">Celsius (°C)</option>
+          <option value="imperial">Fahrenheit (°F)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⏰ Alerts</h2>
+    <div class="toggle">
+      <span>☀️ Daily morning weather</span>
+      <label class="switch"><input type="checkbox" id="daily_enabled" checked /><span class="slider"></span></label>
+    </div>
+    <label>Daily alert time (IST)</label>
+    <input id="daily_time_ist" type="time" value="08:00" />
+    <div class="hint">Remember to set the matching cron (UTC) in the GitHub workflow — the README explains the conversion.</div>
+
+    <div class="toggle">
+      <span>🌧️ Rain "15 min before" alerts</span>
+      <label class="switch"><input type="checkbox" id="rain_enabled" checked /><span class="slider"></span></label>
+    </div>
+    <div class="row">
+      <div><label>Look ahead (minutes)</label><input id="rain_lookahead_min" value="30" /></div>
+      <div><label>Rain threshold (mm/15min)</label><input id="rain_threshold_mm" value="0.2" /></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💾 Save your settings</h2>
+    <p class="hint" style="margin-top:0">This page can't write to your repo directly, so it generates your <span class="badge">config.json</span>. Copy it into the project file (or download it) and commit.</p>
+    <div class="actions">
+      <button class="btn-primary" onclick="generate()">Generate config.json</button>
+    </div>
+    <div class="actions" style="margin-top:10px">
+      <button class="btn-ghost" style="flex:1" onclick="copyCfg()">📋 Copy</button>
+      <button class="btn-ghost" style="flex:1" onclick="download()">⬇️ Download</button>
+      <button class="btn-test" style="flex:1" onclick="sendTest()">🔔 Send test push</button>
+    </div>
+    <div class="status" id="status"></div>
+    <pre id="out" style="display:none"></pre>
+  </div>
+
+  <p class="sub" style="text-align:center">Open-source &amp; free • Weather by Open-Meteo • Push by ntfy.sh</p>
+</div>
+
+<script>
+function val(id){return document.getElementById(id).value.trim();}
+function chk(id){return document.getElementById(id).checked;}
+
+function buildConfig(){
+  return {
+    ntfy_topic: val('topic') || 'REPLACE-WITH-YOUR-SECRET-TOPIC',
+    ntfy_server: 'https://ntfy.sh',
+    location_name: val('location_name'),
+    latitude: parseFloat(val('latitude')),
+    longitude: parseFloat(val('longitude')),
+    skin_type: val('skin_type'),
+    units: val('units'),
+    daily_enabled: chk('daily_enabled'),
+    daily_time_ist: val('daily_time_ist'),
+    rain_enabled: chk('rain_enabled'),
+    rain_lookahead_min: parseInt(val('rain_lookahead_min'),10),
+    rain_threshold_mm: parseFloat(val('rain_threshold_mm'))
+  };
+}
+
+function generate(){
+  const cfg = buildConfig();
+  const out = document.getElementById('out');
+  out.style.display='block';
+  out.textContent = JSON.stringify(cfg, null, 2);
+  setStatus('Generated! Copy this into config.json and commit it.', 'ok');
+  // persist locally so the page remembers your inputs
+  localStorage.setItem('weatherCfg', JSON.stringify(cfg));
+}
+
+function copyCfg(){
+  const t = document.getElementById('out').textContent || JSON.stringify(buildConfig(),null,2);
+  navigator.clipboard.writeText(t).then(()=>setStatus('Copied to clipboard ✅','ok'))
+    .catch(()=>setStatus('Copy failed — select the text manually.','err'));
+}
+
+function download(){
+  const t = JSON.stringify(buildConfig(), null, 2);
+  const blob = new Blob([t], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'config.json'; a.click();
+  setStatus('Downloaded config.json ⬇️','ok');
+}
+
+// HTTP headers must be ISO-8859-1, so emoji/Unicode in the Title must be
+// RFC 2047 base64-encoded (=?UTF-8?B?..?=). ntfy decodes it back automatically.
+function encodeHeader(str){
+  // ASCII-only? send as-is.
+  if(/^[\x00-\xFF]*$/.test(str)) return str;
+  // UTF-8 -> base64 (btoa needs a binary string)
+  const utf8 = new TextEncoder().encode(str);
+  let bin = '';
+  utf8.forEach(b => bin += String.fromCharCode(b));
+  return '=?UTF-8?B?' + btoa(bin) + '?=';
+}
+
+async function sendTest(){
+  const topic = val('topic');
+  if(!topic){ setStatus('Enter your secret topic first.','err'); return; }
+  setStatus('Sending test push…','');
+  try{
+    const res = await fetch('https://ntfy.sh/'+encodeURIComponent(topic), {
+      method:'POST',
+      headers:{
+        'Title': encodeHeader('🌦️ Weather Alert test'),
+        'Tags':'tada',
+        'Priority':'default',
+        'Content-Type':'text/plain; charset=utf-8'
+      },
+      // Emoji in the BODY is always fine — no header restriction there.
+      body:'It works! Your weather alerts will arrive here. 🌦️'
+    });
+    if(res.ok) setStatus('Sent! Check your ntfy app (make sure you subscribed to "'+topic+'").','ok');
+    else setStatus('ntfy responded with status '+res.status,'err');
+  }catch(e){ setStatus('Network error: '+e.message+' (note: the in-app preview blocks network — download settings.html and open it in a real browser like Chrome).','err'); }
+}
+
+function setStatus(msg, cls){
+  const s = document.getElementById('status');
+  s.textContent = msg; s.className = 'status '+(cls||'');
+}
+
+// restore saved settings
+(function(){
+  const saved = localStorage.getItem('weatherCfg');
+  if(!saved) return;
+  try{
+    const c = JSON.parse(saved);
+    const map = ['ntfy_topic|topic','location_name','latitude','longitude','skin_type','units','daily_time_ist','rain_lookahead_min','rain_threshold_mm'];
+    document.getElementById('topic').value = c.ntfy_topic && !c.ntfy_topic.includes('REPLACE') ? c.ntfy_topic : '';
+    ['location_name','latitude','longitude','skin_type','units','daily_time_ist','rain_lookahead_min','rain_threshold_mm'].forEach(k=>{
+      if(document.getElementById(k) && c[k]!=null) document.getElementById(k).value=c[k];
+    });
+    document.getElementById('daily_enabled').checked = c.daily_enabled!==false;
+    document.getElementById('rain_enabled').checked = c.rain_enabled!==false;
+  }catch(e){}
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a08772a339841431',t:'MTc4MDkxNzAwMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
